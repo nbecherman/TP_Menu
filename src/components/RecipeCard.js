@@ -1,14 +1,31 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 
-const RecipeCard = ({ recipe }) => {
+const DishDetailScreen = ({ dish, isInMenu, onAddToMenu, onRemoveFromMenu }) => {
   return (
-    <View>
-      <Text>{recipe.title}</Text>
-      <Text>Ingredients: {recipe.extendedIngredients.map(ingredient => ingredient.name).join(', ')}</Text>
-      <Text>Preparation Time: {recipe.readyInMinutes} minutes</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>{dish.title}</Text>
+      <Text style={styles.attribute}>Health Score: {dish.healthScore}</Text>
+      <Text style={styles.attribute}>Vegan: {dish.vegan ? 'Yes' : 'No'}</Text>
     </View>
   );
 };
 
-export default RecipeCard;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  attribute: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+});
+
+export default DishDetailScreen;

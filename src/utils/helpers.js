@@ -5,4 +5,4 @@ export function calculateTotalPrice(dishes) {
   export function calculateAverageHealthScore(dishes) {
     const totalHealthScore = dishes.reduce((total, dish) => total + dish.healthScore, 0);
     return totalHealthScore / dishes.length;
-  }
+  } 
