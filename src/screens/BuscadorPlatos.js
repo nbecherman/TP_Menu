@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { obtenerPlatosBusqueda } from '../api';
+import Navbar from '../components/navbar';
 
-const BuscadorPlatos = ({ navigation }) => {
+const BuscadorPlatosScreen = ({ navigation }) => {
   const [dishes, setDishes] = useState([]);
   const [query, setQuery] = useState(''); 
   const [error, setError] = useState(null); 
@@ -33,6 +34,7 @@ const BuscadorPlatos = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Navbar />
       <TextInput
         style={styles.searchInput}
         placeholder="Busca platos"
@@ -89,4 +91,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BuscadorPlatos;
+export default BuscadorPlatosScreen;
