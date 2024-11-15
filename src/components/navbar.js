@@ -5,10 +5,11 @@ import { useNavigation } from '@react-navigation/native';
 const Navbar = () => {
   const navigation = useNavigation();
 
+  //navegador buscador-menu
   return (
     <View style={styles.navbar}>
       <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-        <Text style={styles.navItem}>Buscador de Platos</Text>
+        <Text style={styles.navItem}>Buscador de Platos</Text> 
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('MenuPlatos')}>
         <Text style={styles.navItem}>Menú</Text>

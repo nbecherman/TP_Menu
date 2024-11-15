@@ -14,8 +14,8 @@ export const MenuProvider = ({ children }) => {
     const calculateTotals = () => {
      
       const total = menu.reduce((sum, dish) => sum + dish.pricePerServing, 0);
-      const ultPlato = menu[menu.length - 1]; // Obtiene el último plato agregado
-      console.log('precio ult plato:', ultPlato.pricePerServing);
+      //const ultPlato = menu[menu.length - 1]; // Obtiene el último plato agregado
+      //console.log('precio ult plato:', ultPlato.pricePerServing);
       const average = menu.length > 0 
         ? menu.reduce((sum, dish) => sum + dish.healthScore, 0) / menu.length
         : 0;
