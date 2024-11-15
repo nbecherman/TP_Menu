@@ -1,12 +1,25 @@
-import { View, Text, Image, Button, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useMenu } from '../context/MenuContext'; 
+import { Ionicons } from '@expo/vector-icons'; // Importa Ionicons para la cruz
 
-const DishDetailScreen = ({ route }) => {
+const DishDetailScreen = ({ route, navigation }) => {
   const { dish } = route.params;
   const { menu, addToMenu, removeFromMenu } = useMenu(); // Agregar removeFromMenu
 
   // Verifica si el plato ya está en el menú
   const isDishInMenu = menu.some(menuItem => menuItem.id === dish.id);
+
+  // Configura la cruz en la parte superior izquierda
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="close" size={30} color="black" style={{ marginLeft: 10 }} />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>

@@ -1,24 +1,50 @@
 import React from 'react';
-import { MenuProvider } from '../context/MenuContext';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import BuscadorPlatos from '../screens/BuscadorPlatos';
-import menu from '../screens/menu';
+import { MenuProvider } from '../context/MenuContext'; // Asegúrate de que el contexto esté correctamente importado.
+import { NavigationContainer } from '@react-navigation/native'; // Para envolver la aplicación con el contenedor de navegación.
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // Usamos BottomTabNavigator para simular el cambio de contenido.
+import { createStackNavigator } from '@react-navigation/stack'; // Si necesitas Stack dentro de algún Tab.
 
-import DishDetailScreen from '../screens/DishDetailScreen';
+import BuscadorPlatos from '../screens/BuscadorPlatos'; // Pantalla de inicio.
+import MenuScreen from '../screens/menu'; // Pantalla de menú (puedes mostrarla como contenido dentro de un Tab).
+import DishDetailScreen from '../screens/DishDetailScreen'; // Detalles del plato.
 
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator(); // Usamos BottomTabNavigator para manejar las secciones.
+//const Stack = createStackNavigator(); // Si deseas un Stack dentro de alguna pantalla específica.
 
 const AppNavigator = () => {
   return (
     <MenuProvider>
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={BuscadorPlatos} />
-        <Stack.Screen name="DishDetail" component={DishDetailScreen} />
-        <Stack.Screen name="MenuPlatos" component={menu} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <NavigationContainer>
+        {}
+        <Tab.Navigator 
+          initialRouteName="Home" 
+          screenOptions={{ headerShown: true }} 
+        >
+          {}
+          
+          <Tab.Screen name="Home" component={BuscadorPlatos} 
+           options={{
+            tabBarButton: () => null,
+            tabBarIcon: () => null
+          }} />
+          {}
+          <Tab.Screen name="Menu" component={MenuScreen}
+           options={{
+            tabBarButton: () => null,
+            tabBarIcon: () => null
+          }} />
+
+          {}
+          <Tab.Screen 
+            name="DishDetail" 
+            component={DishDetailScreen}
+            options={{
+              tabBarButton: () => null,
+              tabBarIcon: () => null
+            }}
+/>
+        </Tab.Navigator>
+      </NavigationContainer>
     </MenuProvider>
   );
 };

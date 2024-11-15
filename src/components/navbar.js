@@ -11,7 +11,7 @@ const Navbar = () => {
       <TouchableOpacity onPress={() => navigation.navigate('Home')}>
         <Text style={styles.navItem}>Buscador de Platos</Text> 
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('MenuPlatos')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Menu')}>
         <Text style={styles.navItem}>Menú</Text>
       </TouchableOpacity>
     </View>
