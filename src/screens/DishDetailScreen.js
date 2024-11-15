@@ -3,7 +3,10 @@ import { useMenu } from '../context/MenuContext';
 
 const DishDetailScreen = ({ route }) => {
   const { dish } = route.params;
-  const { menu, addToMenu } = useMenu(); 
+  const { menu, addToMenu, removeFromMenu } = useMenu(); // Agregar removeFromMenu
+
+  // Verifica si el plato ya está en el menú
+  const isDishInMenu = menu.some(menuItem => menuItem.id === dish.id);
 
   return (
     <View style={styles.container}>
@@ -13,7 +16,20 @@ const DishDetailScreen = ({ route }) => {
       <Text style={styles.dietType}>
         {dish.vegan ? 'Vegan' : 'Not Vegan'}
       </Text>
-      <Button title="Agregar al Menú" onPress={() => addToMenu(dish)} />
+
+      {isDishInMenu ? (
+        <Button
+          title="Eliminar del Menú"
+          onPress={() => removeFromMenu(dish.id)}
+          color="red" // Cambia el color a rojo
+        />
+      ) : (
+        <Button
+          title="Agregar al Menú"
+          onPress={() => addToMenu(dish)}
+          color="blue" // Mantiene el color azul por defecto
+        />
+      )}
     </View>
   );
 };
