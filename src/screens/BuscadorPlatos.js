@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, FlatList, Image, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { obtenerPlatosBusqueda } from '../api';
 import Navbar from '../components/navbar';
 import { useMenu } from '../context/MenuContext';
@@ -8,24 +8,50 @@ const BuscadorPlatosScreen = ({ navigation }) => {
   const [dishes, setDishes] = useState([]);
   const [query, setQuery] = useState('');
   const [error, setError] = useState(null);
-  const { totalPrice, averageHealthScore } = useMenu(); // Obtener valores del contexto
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(false); //para la paginacion
+  const [hasSearched, setHasSearched] = useState(false); //booleano para que no aparezca no hay platos antes de haber buscado
+
+  const { totalPrice, averageHealthScore } = useMenu();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (query.length >= 2) {
+      if (query.length >= 3) {
         try {
-          const data = await obtenerPlatosBusqueda(query);
+          setIsLoading(true); //si esta buscando
+          const data = await obtenerPlatosBusqueda(query, page);
+          if (data.length === 0) setHasMore(false); //si hay resultado deja poner sig
           setDishes(data);
         } catch (err) {
           setError('Hubo un problema al cargar los platos.');
+        } finally {
+          setIsLoading(false);
         }
+      } else {
+        setDishes([]);//no muestra los platos
+        setHasMore(false) //si hay menos de 3 letras no te deja siguiente
       }
     };
+  
     fetchData();
-  }, [query]);
+  }, [query, page]); //se llama cuando se cambia la query en el buscador o se avanza de page
+  
+  const handleNextPage = () => {
+    if (hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    } //si hay mas resultado(se verifica en el efect arriba), prevpage es la pagina actual y se le suma uno
+  };
+
+  const handlePrevPage = () => {
+    if (page > 1) {
+      setPage((prevPage) => prevPage - 1);
+      setHasMore(true); //si fue para atras hay una siguiente
+    }
+  };
 
   const renderDish = ({ item }) => (
-    <TouchableOpacity
+    <TouchableOpacity 
       style={styles.dishItem}
       onPress={() => navigation.navigate('DishDetail', { dish: item })}
     >
@@ -41,7 +67,12 @@ const BuscadorPlatosScreen = ({ navigation }) => {
         style={styles.searchInput}
         placeholder="Busca platos"
         value={query}
-        onChangeText={setQuery}
+        onChangeText={(text) => {
+          setQuery(text);
+          setPage(1); 
+          setHasMore(true);
+          setHasSearched(true);
+        }}
       />
 
       {error && <Text style={styles.errorText}>{error}</Text>}
@@ -53,7 +84,14 @@ const BuscadorPlatosScreen = ({ navigation }) => {
         data={dishes}
         renderItem={renderDish}
         keyExtractor={(item) => item.id.toString()}
+        ListEmptyComponent={!isLoading && hasSearched && <Text style={styles.errorText}>No se encontraron platos.</Text>}
       />
+
+      <View style={styles.paginationContainer}>
+        <Button title="Anterior" onPress={handlePrevPage} disabled={page === 1} />
+        <Text style={styles.pageText}>Página {page}</Text>
+        <Button title="Siguiente" onPress={handleNextPage} disabled={!hasMore} />
+      </View>
     </View>
   );
 };
@@ -62,43 +100,62 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#f7f7f7', // Fondo más suave
   },
   searchInput: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#d3d3d3', // Gris claro
     borderWidth: 1,
-    paddingHorizontal: 8,
-    marginBottom: 16,
+    paddingHorizontal: 12,
+    marginBottom: 20,
+    borderRadius: 8,
+    backgroundColor: '#fff', // Blanco para el campo de búsqueda
   },
   dishItem: {
-    padding: 10,
-    marginBottom: 10,
+    padding: 12,
+    marginBottom: 16,
     borderWidth: 1,
-    borderColor: 'lightgray',
+    borderColor: '#e1e1e1', // Gris claro
+    borderRadius: 12,
+    backgroundColor: '#fff',
     alignItems: 'center',
   },
   dishImage: {
     width: 200,
     height: 150,
-    borderRadius: 10,
+    borderRadius: 12,
     marginBottom: 8,
   },
   dishTitle: {
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#555', // Tono más suave
   },
   errorText: {
-    color: 'red',
+    color: '#e74c3c', // Rojo más sutil
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 10,
   },
   infoText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 5,
+    color: '#555',
+    marginVertical: 10,
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  pageText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#777', // Gris suave
   },
 });
+
 
 export default BuscadorPlatosScreen;

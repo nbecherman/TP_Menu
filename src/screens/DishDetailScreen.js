@@ -6,8 +6,6 @@ import { Ionicons } from '@expo/vector-icons'; // Importa Ionicons para la cruz
 const DishDetailScreen = ({ route, navigation }) => {
   const { dish } = route.params;
   const { menu, addToMenu, removeFromMenu } = useMenu(); // Agregar removeFromMenu
-
-  // Verifica si el plato ya está en el menú
   const isDishInMenu = menu.some(menuItem => menuItem.id === dish.id);
 
   // Configura la cruz en la parte superior izquierda
@@ -26,8 +24,9 @@ const DishDetailScreen = ({ route, navigation }) => {
       <Image source={{ uri: dish.image }} style={styles.image} />
       <Text style={styles.title}>{dish.title}</Text>
       <Text style={styles.healthScore}>Health Score: {dish.healthScore}</Text>
+      <Text style={styles.healthScore}>Precio: {dish.pricePerServing}</Text>
       <Text style={styles.dietType}>
-        {dish.vegan ? 'Vegan' : 'Not Vegan'}
+        {dish.vegan ? 'Vegan' : 'No es Vegano'}
       </Text>
 
       {isDishInMenu ? (
@@ -49,25 +48,42 @@ const DishDetailScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#f7f7f7',
   },
   image: {
     width: '100%',
-    height: 200,
+    height: 250,
     resizeMode: 'cover',
+    borderRadius: 12,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginVertical: 10,
+    marginVertical: 15,
+    color: '#333',
   },
   healthScore: {
     fontSize: 18,
     marginVertical: 5,
+    color: '#777',
   },
   dietType: {
     fontSize: 18,
     marginVertical: 5,
+    color: '#777',
+  },
+  button: {
+    borderRadius: 8,
+    padding: 12,
+    marginVertical: 10,
+    backgroundColor: '#67b7e1', // Azul pastel
+  },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 16,
   },
 });
 
